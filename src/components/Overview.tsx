@@ -30,7 +30,7 @@ const Overview = () => {
     labels: [],
     datasets: [
       {
-        label: 'Sales',
+        label: 'Orders',
         data: [],
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
@@ -67,7 +67,7 @@ const Overview = () => {
       labels: dataByTimeFrame.labels,
       datasets: [
         {
-          label: 'Sales',
+          label: 'Orders',
           data: dataByTimeFrame.data,
           backgroundColor: 'rgba(0, 128, 0, 0.6)',
         },
@@ -138,7 +138,7 @@ const Overview = () => {
       },
       title: {
         display: true,
-        text: 'Sales Overview',
+        text: 'Insurance Orders Overview',
       },
     },
     scales: {
@@ -161,7 +161,7 @@ const Overview = () => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold">Sales Overview</h3>
+        <h3 className="text-xl font-semibold">Insurance Orders Overview</h3>
         <div className="flex items-center">
           <label htmlFor="timeFrame" className="mr-2">Time frame:</label>
           <select
