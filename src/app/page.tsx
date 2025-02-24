@@ -64,7 +64,7 @@ function Dashboard() {
           <button
             key={item.name}
             onClick={() => setActiveTab(item.name)}
-            className={`flex hover:text-slate-300 hover:underline items-center mb-4 ${activeTab === item.name ? 'text-blue-300' : ''} ${sidebarOpen ? 'w-full mb-7' : 'w-10 mb-10'} overflow-hidden`}
+            className={`flex hover:text-slate-300 hover:underline items-center mb-8 ${activeTab === item.name ? 'text-blue-300' : ''} ${sidebarOpen ? 'w-full mb-7' : 'w-10 mb-10'} overflow-hidden`}
           >
             <item.icon className="mr-2" />
             {sidebarOpen && <span>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</span>}
