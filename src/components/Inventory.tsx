@@ -312,8 +312,8 @@ const Library = () => {
                 <h4 className="font-semibold text-lg">{data.title}</h4>
                 <span className="font-medium text-green-600">${data.price}</span>
               </div>
-              <p className="text-sm text-gray-600">Genre: {data.genre}</p>
-              <p className="text-sm text-gray-600">BPM: {data.bpm}</p>
+              <p className="text-sm text-gray-600">Full Name: {data.genre}</p>
+              <p className="text-sm text-gray-600">Insurance_active: {data.bpm}</p>
               <div className="flex justify-end space-x-3 mt-4">
                 <button
                   onClick={() => handleDeleteBeat(id)}
