@@ -5,7 +5,7 @@ import { auth } from '../../firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { FaHome, FaShoppingCart, FaBoxes, FaHistory, FaAd, FaQuestionCircle, FaCog, FaSignOutAlt, FaBell } from 'react-icons/fa';
+import { FaHome, FaShoppingCart, FaBoxes, FaHistory, FaAd, FaQuestionCircle, FaCog, FaSignOutAlt, FaBell, FaPersonBooth } from 'react-icons/fa';
 
 // Import components
 import Overview from '@/components/Overview';
@@ -45,7 +45,7 @@ function Dashboard() {
 
   const menuItems = [
     { name: 'overview', icon: FaHome, component: Overview },
-    { name: 'Inventory', icon: FaBoxes, component: Library },
+    { name: 'Clients', icon: FaPersonBooth, component: Library },
     { name: 'Orders', icon: FaShoppingCart, component: CurrentOrders },
     
   ];

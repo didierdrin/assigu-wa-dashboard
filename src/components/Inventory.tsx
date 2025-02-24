@@ -185,9 +185,9 @@ const Library = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-semibold mb-4">Beat Upload</h3>
+      <h3 className="text-xl font-semibold mb-4">Client List</h3>
 
-      <form onSubmit={handleAddBeat} className="mb-8 space-y-4">
+      {/* <form onSubmit={handleAddBeat} className="mb-8 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
@@ -298,10 +298,10 @@ const Library = () => {
         >
           {loading ? "Uploading..." : "Upload Beat"}
         </button>
-      </form>
+      </form> */}
 
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-4">Uploaded Beats</h3>
+        <h3 className="text-lg font-medium mb-4">Client(Already used our service)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {beats.map(({ id, data }) => (
             <div
