@@ -12,6 +12,7 @@
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.0",
     "chart.js": "^4.4.8",
     "next": "15.1.7",
