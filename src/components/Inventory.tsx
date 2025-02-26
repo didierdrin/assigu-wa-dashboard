@@ -171,7 +171,7 @@ const Library = () => {
             >
               <div className="flex justify-between items-start mb-3">
                 <h4 className="font-semibold text-lg">
-                  {data.policyholderName || "N/A"}
+                  {data.nationalIdNames || "N/A"}
                 </h4>
                 <span className="font-medium text-green-600">
                   RWF {data.totalCost || "N/A"}
