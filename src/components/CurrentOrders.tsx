@@ -122,7 +122,7 @@ const handleSendProforma = async () => {
     // Show loading state if needed
     // e.g., setIsLoading(true);
     
-    const response = await fetch('/api/send-proforma', {
+    const response = await fetch('https://assigurwmessaging.onrender.com/api/send-proforma', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const handleMarkAsPaid = async () => {
     // Optional: You could ask for payment reference in a modal before proceeding
     // const paymentReference = await showPaymentReferenceModal();
     
-    const response = await fetch('/api/mark-as-paid', {
+    const response = await fetch('https://assigurwmessaging.onrender.com/api/mark-as-paid', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
