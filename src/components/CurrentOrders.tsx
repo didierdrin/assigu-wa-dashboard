@@ -42,7 +42,10 @@ interface Order {
   nationalIdNames?: string;
   nationalIdNumber?: string;
   userPhone: string;
-  tin?: string;
+  yellowCardTin?: string;
+  yellowCardImmatriculation?: string;
+  yellowCardChassis?: string;
+  yellowCardAnnee?: string;
   plateNumber: string;
   markAndType: string;
   chassis: string;
@@ -329,17 +332,20 @@ const CurrentOrders = () => {
                   <TableCell onClick={() => handleCopy(order.userPhone)}>
                     {order.userPhone}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.tin || "N/A")}>
-                    {order.tin || "N/A"}
+                  <TableCell onClick={() => handleCopy(order.yellowCardTin || "N/A")}>
+                    {order.yellowCardTin || "N/A"}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.plateNumber)}>
-                    {order.plateNumber}
+                  <TableCell onClick={() => handleCopy(order.yellowCardImmatriculation || "N/A")}>
+                    {order.yellowCardImmatriculation}
                   </TableCell>
                   <TableCell onClick={() => handleCopy(order.markAndType)}>
                     {order.markAndType}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.chassis)}>
-                    {order.chassis}
+                  <TableCell onClick={() => handleCopy(order.yellowCardChassis || "N/A")}>
+                    {order.yellowCardChassis}
+                  </TableCell>
+                  <TableCell onClick={() => handleCopy(order.yellowCardAnnee || "N/A")}>
+                    {order.yellowCardAnnee}
                   </TableCell>
                   <TableCell onClick={() => handleCopy(
                     order.creationDate ? new Date(order.creationDate.seconds * 1000).getFullYear().toString() : "N/A"
