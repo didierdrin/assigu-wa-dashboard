@@ -206,7 +206,7 @@ const handleMarkAsPaid = async () => {
 
 
   return (
-    <div className="bg-white w-full">
+    <div className="bg-white overflow-x-hidden">
       <Tabs value={currentTab} onChange={handleTabChange} className="border-b">
         <Tab label="Processing" />
         <Tab label="Proforma" />
