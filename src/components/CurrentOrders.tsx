@@ -6,7 +6,7 @@ import {
   onSnapshot,
   doc,
   updateDoc,
-  Timestamp
+  Timestamp,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestore as db, storage } from "../../firebaseApp";
@@ -30,14 +30,12 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { getAuth } from "firebase/auth";
-
-
 
 // Define your Order interface
 interface Order {
@@ -93,8 +91,16 @@ const updateField = async (orderId: string, field: string, value: any) => {
 };
 
 // Custom component for the Proforma cell
-const ProformaCell = ({ order, updateField }: { order: Order; updateField: any }) => {
-  const [attachedFile, setAttachedFile] = useState<string | null>(order.uploadedProformaUrl || null);
+const ProformaCell = ({
+  order,
+  updateField,
+}: {
+  order: Order;
+  updateField: any;
+}) => {
+  const [attachedFile, setAttachedFile] = useState<string | null>(
+    order.uploadedProformaUrl || null
+  );
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,16 +110,16 @@ const ProformaCell = ({ order, updateField }: { order: Order; updateField: any }
       try {
         // Create a reference to the storage location
         const storageRef = ref(storage, `proformas/${order.id}/${file.name}`);
-        
+
         // Upload the file
         const snapshot = await uploadBytes(storageRef, file);
-        
+
         // Get the download URL
         const downloadURL = await getDownloadURL(snapshot.ref);
-        
+
         // Update the field in Firestore
         await updateField(order.id, "uploadedProformaUrl", downloadURL);
-        
+
         // Update local state
         setAttachedFile(downloadURL);
       } catch (error) {
@@ -129,14 +135,17 @@ const ProformaCell = ({ order, updateField }: { order: Order; updateField: any }
     // Here you would call your send API which uses the attachedFile URL
     console.log("Sending proforma using URL:", attachedFile);
     try {
-      const response = await fetch('https://assigurwmessaging.onrender.com/api/send-proforma', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          orderId: order.id,
-          proformaUrl: attachedFile 
-        })
-      });
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/send-proforma",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            proformaUrl: attachedFile,
+          }),
+        }
+      );
       const data = await response.json();
       if (data.success) {
         console.log("Proforma sent successfully");
@@ -152,16 +161,22 @@ const ProformaCell = ({ order, updateField }: { order: Order; updateField: any }
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       {uploading ? (
         <CircularProgress size={24} />
       ) : attachedFile ? (
         <>
-          <a 
-            href={attachedFile} 
-            target="_blank" 
+          <a
+            href={attachedFile}
+            target="_blank"
             rel="noopener noreferrer"
-            style={{ marginRight: '8px', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            style={{
+              marginRight: "8px",
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
           >
             View File
           </a>
@@ -190,8 +205,16 @@ const ProformaCell = ({ order, updateField }: { order: Order; updateField: any }
 };
 
 // Custom component for the Insurance Certificate cell
-const InsuranceCertificateCell = ({ order, updateField }: { order: Order; updateField: any }) => {
-  const [attachedFile, setAttachedFile] = useState<string | null>(order.uploadedInsuranceCertificateUrl || null);
+const InsuranceCertificateCell = ({
+  order,
+  updateField,
+}: {
+  order: Order;
+  updateField: any;
+}) => {
+  const [attachedFile, setAttachedFile] = useState<string | null>(
+    order.uploadedInsuranceCertificateUrl || null
+  );
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,17 +223,24 @@ const InsuranceCertificateCell = ({ order, updateField }: { order: Order; update
       setUploading(true);
       try {
         // Create a reference to the storage location
-        const storageRef = ref(storage, `certificates/${order.id}/${file.name}`);
-        
+        const storageRef = ref(
+          storage,
+          `certificates/${order.id}/${file.name}`
+        );
+
         // Upload the file
         const snapshot = await uploadBytes(storageRef, file);
-        
+
         // Get the download URL
         const downloadURL = await getDownloadURL(snapshot.ref);
-        
+
         // Update the field in Firestore
-        await updateField(order.id, "uploadedInsuranceCertificateUrl", downloadURL);
-        
+        await updateField(
+          order.id,
+          "uploadedInsuranceCertificateUrl",
+          downloadURL
+        );
+
         // Update local state
         setAttachedFile(downloadURL);
       } catch (error) {
@@ -225,14 +255,17 @@ const InsuranceCertificateCell = ({ order, updateField }: { order: Order; update
   const handleSend = async () => {
     console.log("Sending insurance certificate using URL:", attachedFile);
     try {
-      const response = await fetch('https://assigurwmessaging.onrender.com/api/send-insurance-certificate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          orderId: order.id,
-          certificateUrl: attachedFile 
-        })
-      });
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/send-insurance-certificate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            certificateUrl: attachedFile,
+          }),
+        }
+      );
       const data = await response.json();
       if (data.success) {
         console.log("Insurance certificate sent successfully");
@@ -248,16 +281,22 @@ const InsuranceCertificateCell = ({ order, updateField }: { order: Order; update
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       {uploading ? (
         <CircularProgress size={24} />
       ) : attachedFile ? (
         <>
-          <a 
-            href={attachedFile} 
-            target="_blank" 
+          <a
+            href={attachedFile}
+            target="_blank"
             rel="noopener noreferrer"
-            style={{ marginRight: '8px', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            style={{
+              marginRight: "8px",
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
           >
             View File
           </a>
@@ -285,7 +324,6 @@ const InsuranceCertificateCell = ({ order, updateField }: { order: Order; update
   );
 };
 
- 
 const CurrentOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -301,11 +339,14 @@ const CurrentOrders = () => {
     const statuses = ["processing", "proforma", "completed", "cancelled"];
     const currentStatus = statuses[currentTab];
 
-    const q = query(collection(db, "whatsappInsuranceOrders"), where("status", "==", currentStatus));
+    const q = query(
+      collection(db, "whatsappInsuranceOrders"),
+      where("status", "==", currentStatus)
+    );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const ordersData: Order[] = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<Order, "id">)
+        ...(doc.data() as Omit<Order, "id">),
       }));
       setOrders(ordersData);
     });
@@ -322,7 +363,7 @@ const CurrentOrders = () => {
     return new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "short",
-      day: "numeric"
+      day: "numeric",
     }).format(timestamp.toDate());
   };
 
@@ -335,11 +376,14 @@ const CurrentOrders = () => {
   const handleSendProforma = async () => {
     if (!selectedOrder) return;
     try {
-      const response = await fetch('https://assigurwmessaging.onrender.com/api/send-proforma', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: selectedOrder.id })
-      });
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/send-proforma",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId: selectedOrder.id }),
+        }
+      );
       const data = await response.json();
       if (data.success) {
         console.log("Proforma sent successfully");
@@ -356,11 +400,14 @@ const CurrentOrders = () => {
   const handleMarkAsPaid = async () => {
     if (!selectedOrder) return;
     try {
-      const response = await fetch('https://assigurwmessaging.onrender.com/api/mark-as-paid', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: selectedOrder.id })
-      });
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/mark-as-paid",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId: selectedOrder.id }),
+        }
+      );
       const data = await response.json();
       if (data.success) {
         console.log("Payment processed successfully");
@@ -381,7 +428,7 @@ const CurrentOrders = () => {
         <Tab label="Completed" />
         <Tab label="Cancelled" />
       </Tabs>
-      <Box sx={{ overflow: 'auto' }}>
+      <Box sx={{ overflow: "auto" }}>
         <Table sx={{ minWidth: 2500 }}>
           <TableHead>
             <TableRow>
@@ -424,31 +471,45 @@ const CurrentOrders = () => {
             ) : (
               orders.map((order, index) => (
                 <TableRow key={order.id} hover>
-                  <TableCell onClick={() => handleCopy(String(index + 1))}>
+                  <TableCell className="cursor-pointer" onClick={() => handleCopy(String(index + 1))}>
                     {index + 1}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.nationalIdNames || "N/A")}>
+                  <TableCell
+                    onClick={() => handleCopy(order.nationalIdNames || "N/A")}
+                  >
                     {order.nationalIdNames || "N/A"}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.nationalIdNumber || "N/A")}>
+                  <TableCell
+                    onClick={() => handleCopy(order.nationalIdNumber || "N/A")}
+                  >
                     {order.nationalIdNumber || "N/A"}
                   </TableCell>
                   <TableCell onClick={() => handleCopy(order.userPhone)}>
                     {order.userPhone}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.yellowCardTin || "N/A")}>
+                  <TableCell
+                    onClick={() => handleCopy(order.yellowCardTin || "N/A")}
+                  >
                     {order.yellowCardTin || "N/A"}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.yellowCardImmatriculation || "N/A")}>
+                  <TableCell
+                    onClick={() =>
+                      handleCopy(order.yellowCardImmatriculation || "N/A")
+                    }
+                  >
                     {order.yellowCardImmatriculation}
                   </TableCell>
                   <TableCell onClick={() => handleCopy(order.markAndType)}>
                     {order.markAndType}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.yellowCardChassis || "N/A")}>
+                  <TableCell
+                    onClick={() => handleCopy(order.yellowCardChassis || "N/A")}
+                  >
                     {order.yellowCardChassis}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.yellowCardAnnee || "N/A")}>
+                  <TableCell
+                    onClick={() => handleCopy(order.yellowCardAnnee || "N/A")}
+                  >
                     {order.yellowCardAnnee}
                   </TableCell>
                   {/* <TableCell onClick={() => handleCopy(
@@ -461,7 +522,13 @@ const CurrentOrders = () => {
                     <TextField
                       type="number"
                       value={order.licensedToCarryNo}
-                      onChange={(e) => updateField(order.id, "licensedToCarryNo", e.target.value)}
+                      onChange={(e) =>
+                        updateField(
+                          order.id,
+                          "licensedToCarryNo",
+                          e.target.value
+                        )
+                      }
                     />
                   </TableCell>
                   {/* Usage - dropdown */}
@@ -471,7 +538,9 @@ const CurrentOrders = () => {
                       <Select
                         value={order.usage}
                         label="Usage"
-                        onChange={(e) => updateField(order.id, "usage", e.target.value)}
+                        onChange={(e) =>
+                          updateField(order.id, "usage", e.target.value)
+                        }
                       >
                         <MenuItem value="Private">Private</MenuItem>
                         <MenuItem value="Commercial">Commercial</MenuItem>
@@ -481,7 +550,9 @@ const CurrentOrders = () => {
                   <TableCell onClick={() => handleCopy(order.insurer)}>
                     {order.insurer}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.insuranceStartDate)}>
+                  <TableCell
+                    onClick={() => handleCopy(order.insuranceStartDate)}
+                  >
                     {order.insuranceStartDate}
                   </TableCell>
                   <TableCell onClick={() => handleCopy(order.expiryDate)}>
@@ -492,7 +563,9 @@ const CurrentOrders = () => {
                     <input
                       type="time"
                       value={order.timeValue || ""}
-                      onChange={(e) => updateField(order.id, "timeValue", e.target.value)}
+                      onChange={(e) =>
+                        updateField(order.id, "timeValue", e.target.value)
+                      }
                     />
                   </TableCell>
                   {/* Issue Date - date picker */}
@@ -500,7 +573,9 @@ const CurrentOrders = () => {
                     <input
                       type="date"
                       value={order.issueDate || ""}
-                      onChange={(e) => updateField(order.id, "issueDate", e.target.value)}
+                      onChange={(e) =>
+                        updateField(order.id, "issueDate", e.target.value)
+                      }
                     />
                   </TableCell>
                   {/* Type - dropdown */}
@@ -510,7 +585,9 @@ const CurrentOrders = () => {
                       <Select
                         value={order.carBodyType}
                         label="Type"
-                        onChange={(e) => updateField(order.id, "carBodyType", e.target.value)}
+                        onChange={(e) =>
+                          updateField(order.id, "carBodyType", e.target.value)
+                        }
                       >
                         <MenuItem value="Sedan">Sedan</MenuItem>
                         <MenuItem value="SUV">SUV</MenuItem>
@@ -520,35 +597,62 @@ const CurrentOrders = () => {
                       </Select>
                     </FormControl>
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.selectedCoverTypes || "N/A")}>
+                  <TableCell
+                    onClick={() =>
+                      handleCopy(order.selectedCoverTypes || "N/A")
+                    }
+                  >
                     {order.selectedCoverTypes || "N/A"}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(String(order.netPremium ?? "N/A"))}>
+                  <TableCell
+                    onClick={() =>
+                      handleCopy(String(order.netPremium ?? "N/A"))
+                    }
+                  >
                     {order.netPremium ?? "N/A"}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(String(order.selectedPersonalAccidentCoverage))}>
+                  <TableCell
+                    onClick={() =>
+                      handleCopy(String(order.selectedPersonalAccidentCoverage))
+                    }
+                  >
                     {order.selectedPersonalAccidentCoverage}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.selectedInstallment || "N/A")}>
+                  <TableCell
+                    onClick={() =>
+                      handleCopy(order.selectedInstallment || "N/A")
+                    }
+                  >
                     {order.selectedInstallment || "N/A"}
                   </TableCell>
                   {/* Proforma - custom cell */}
                   <TableCell>
-        <ProformaCell order={order} updateField={updateField} />
-      </TableCell>
-                  <TableCell onClick={() => handleCopy(order.momoName || "N/A")}>
+                    <ProformaCell order={order} updateField={updateField} />
+                  </TableCell>
+                  <TableCell
+                    onClick={() => handleCopy(order.momoName || "N/A")}
+                  >
                     {order.momoName || "N/A"}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(String(order.totalCost))}>
+                  <TableCell
+                    onClick={() => handleCopy(String(order.totalCost))}
+                  >
                     {order.totalCost}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(String(order.paidAmount ?? "N/A"))}>
+                  <TableCell
+                    onClick={() =>
+                      handleCopy(String(order.paidAmount ?? "N/A"))
+                    }
+                  >
                     {order.paidAmount ?? "N/A"}
                   </TableCell>
                   {/* Insurance Certificate - custom cell */}
                   <TableCell>
-        <InsuranceCertificateCell order={order} updateField={updateField} />
-      </TableCell>
+                    <InsuranceCertificateCell
+                      order={order}
+                      updateField={updateField}
+                    />
+                  </TableCell>
                   {/* View button to open dialog */}
                   <TableCell>
                     <Button
@@ -583,7 +687,7 @@ const CurrentOrders = () => {
                 display: "flex",
                 flexWrap: "wrap",
                 gap: "16px",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               {/* Car Image */}
@@ -594,7 +698,9 @@ const CurrentOrders = () => {
                   style={{ maxWidth: "200px" }}
                 />
                 <div>
-                  <IconButton onClick={() => handleCopy(selectedOrder.carImageUrl)}>
+                  <IconButton
+                    onClick={() => handleCopy(selectedOrder.carImageUrl)}
+                  >
                     <ContentCopyIcon />
                   </IconButton>
                 </div>
@@ -607,7 +713,11 @@ const CurrentOrders = () => {
                   style={{ maxWidth: "200px" }}
                 />
                 <div>
-                  <IconButton onClick={() => handleCopy(selectedOrder.insuranceDocumentUrl)}>
+                  <IconButton
+                    onClick={() =>
+                      handleCopy(selectedOrder.insuranceDocumentUrl)
+                    }
+                  >
                     <ContentCopyIcon />
                   </IconButton>
                 </div>
@@ -620,7 +730,11 @@ const CurrentOrders = () => {
                   style={{ maxWidth: "200px" }}
                 />
                 <div>
-                  <IconButton onClick={() => handleCopy(selectedOrder.nationalIdDocumentUrl)}>
+                  <IconButton
+                    onClick={() =>
+                      handleCopy(selectedOrder.nationalIdDocumentUrl)
+                    }
+                  >
                     <ContentCopyIcon />
                   </IconButton>
                 </div>
@@ -633,7 +747,11 @@ const CurrentOrders = () => {
                   style={{ maxWidth: "200px" }}
                 />
                 <div>
-                  <IconButton onClick={() => handleCopy(selectedOrder.yellowCardDocumentUrl)}>
+                  <IconButton
+                    onClick={() =>
+                      handleCopy(selectedOrder.yellowCardDocumentUrl)
+                    }
+                  >
                     <ContentCopyIcon />
                   </IconButton>
                 </div>
@@ -644,12 +762,20 @@ const CurrentOrders = () => {
         <DialogActions>
           <Button onClick={() => setSelectedOrder(null)}>Close</Button>
           {selectedOrder && selectedOrder.status === "processing" && (
-            <Button onClick={handleSendProforma} variant="contained" color="primary">
+            <Button
+              onClick={handleSendProforma}
+              variant="contained"
+              color="primary"
+            >
               Send Proforma
             </Button>
           )}
           {selectedOrder && selectedOrder.status === "proforma" && (
-            <Button onClick={handleMarkAsPaid} variant="contained" color="success">
+            <Button
+              onClick={handleMarkAsPaid}
+              variant="contained"
+              color="success"
+            >
               Paid
             </Button>
           )}
@@ -660,4 +786,3 @@ const CurrentOrders = () => {
 };
 
 export default CurrentOrders;
-
