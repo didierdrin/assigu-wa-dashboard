@@ -347,11 +347,11 @@ const CurrentOrders = () => {
                   <TableCell onClick={() => handleCopy(order.yellowCardAnnee || "N/A")}>
                     {order.yellowCardAnnee}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(
+                  {/* <TableCell onClick={() => handleCopy(
                     order.creationDate ? new Date(order.creationDate.seconds * 1000).getFullYear().toString() : "N/A"
                   )}>
                     {order.creationDate ? new Date(order.creationDate.seconds * 1000).getFullYear() : "N/A"}
-                  </TableCell>
+                  </TableCell> */}
                   {/* Licensed to Carry - editable input */}
                   <TableCell>
                     <TextField
