@@ -977,7 +977,7 @@ const CurrentOrders = () => {
               Send Proforma
             </Button>
          )} */}
-          {selectedOrder && selectedOrder.status === "proforma" && (
+          {/* {selectedOrder && selectedOrder.status === "proforma" && (
             <Button
               onClick={handleMarkAsPaid}
               variant="contained"
@@ -985,7 +985,7 @@ const CurrentOrders = () => {
             >
               Send Certificate
             </Button>
-          )}
+          )} */}
         </DialogActions>
       </Dialog>
       {/* Image Enlargement Dialog */}
