@@ -456,8 +456,9 @@ const CurrentOrders = () => {
         <Tab label="Completed" />
         <Tab label="Cancelled" />
       </Tabs>
-      <Box sx={{ overflow: "auto" }}>
-        <Table sx={{ minWidth: 2500 }}>
+      <Box sx={{ overflow: "auto" }} style={{ width: "100%", overflowX: "auto" }}>
+      {/* sx={{ minWidth: 2500 }} */}
+        <Table >
           <TableHead>
             <TableRow>
               <TableCell>No</TableCell>
