@@ -335,10 +335,20 @@ const InsuranceCertificateCell = ({
 };
 
 const CurrentOrders = () => {
+
+  const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
+const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
+
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
   const auth = getAuth();
+
+  const handleImageClick = (imageUrl: string, title: string) => {
+    setEnlargedImage(imageUrl);
+    setEnlargedImageTitle(title);
+  };
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -724,77 +734,84 @@ const CurrentOrders = () => {
               }}
             >
               {/* Car Image */}
-              <div style={{ textAlign: "center" }}>
-                <img
-                  src={selectedOrder.carImageUrl}
-                  alt="Car"
-                  style={{ maxWidth: "200px" }}
-                />
-                <div>
-                  <IconButton
-                    onClick={() => handleCopy(selectedOrder.carImageUrl)}
-                  >
-                    <ContentCopyIcon />
-                  </IconButton>
-                </div>
-              </div>
-              {/* Insurance Document */}
-              <div style={{ textAlign: "center" }}>
-                <img
-                  src={selectedOrder.insuranceDocumentUrl}
-                  alt="Insurance Document"
-                  style={{ maxWidth: "200px" }}
-                />
-                <div>
-                  <IconButton
-                    onClick={() =>
-                      handleCopy(selectedOrder.insuranceDocumentUrl)
-                    }
-                  >
-                    <ContentCopyIcon />
-                  </IconButton>
-                </div>
-              </div>
-              {/* National ID Document */}
-              <div style={{ textAlign: "center" }}>
-                <img
-                  src={selectedOrder.nationalIdDocumentUrl}
-                  alt="National ID"
-                  style={{ maxWidth: "200px" }}
-                />
-                <div>
-                  <IconButton
-                    onClick={() =>
-                      handleCopy(selectedOrder.nationalIdDocumentUrl)
-                    }
-                  >
-                    <ContentCopyIcon />
-                  </IconButton>
-                </div>
-              </div>
-              {/* Yellow Card Document */}
-              <div style={{ textAlign: "center" }}>
-                <img
-                  src={selectedOrder.yellowCardDocumentUrl}
-                  alt="Yellow Card"
-                  style={{ maxWidth: "200px" }}
-                />
-                <div>
-                  <IconButton
-                    onClick={() =>
-                      handleCopy(selectedOrder.yellowCardDocumentUrl)
-                    }
-                  >
-                    <ContentCopyIcon />
-                  </IconButton>
-                </div>
-              </div>
+<div style={{ textAlign: "center" }}>
+  <img
+    src={selectedOrder.carImageUrl}
+    alt="Car"
+    style={{ maxWidth: "200px", cursor: "pointer" }}
+    onClick={() => handleImageClick(selectedOrder.carImageUrl, "Car Image")}
+  />
+  <div>
+    <IconButton
+      onClick={() => handleCopy(selectedOrder.carImageUrl)}
+    >
+      <ContentCopyIcon />
+    </IconButton>
+  </div>
+</div>
+
+{/* Insurance Document */}
+<div style={{ textAlign: "center" }}>
+  <img
+    src={selectedOrder.insuranceDocumentUrl}
+    alt="Insurance Document"
+    style={{ maxWidth: "200px", cursor: "pointer" }}
+    onClick={() => handleImageClick(selectedOrder.insuranceDocumentUrl, "Insurance Document")}
+  />
+  <div>
+    <IconButton
+      onClick={() =>
+        handleCopy(selectedOrder.insuranceDocumentUrl)
+      }
+    >
+      <ContentCopyIcon />
+    </IconButton>
+  </div>
+</div>
+
+{/* National ID Document */}
+<div style={{ textAlign: "center" }}>
+  <img
+    src={selectedOrder.nationalIdDocumentUrl}
+    alt="National ID"
+    style={{ maxWidth: "200px", cursor: "pointer" }}
+    onClick={() => handleImageClick(selectedOrder.nationalIdDocumentUrl, "National ID")}
+  />
+  <div>
+    <IconButton
+      onClick={() =>
+        handleCopy(selectedOrder.nationalIdDocumentUrl)
+      }
+    >
+      <ContentCopyIcon />
+    </IconButton>
+  </div>
+</div>
+
+{/* Yellow Card Document */}
+<div style={{ textAlign: "center" }}>
+  <img
+    src={selectedOrder.yellowCardDocumentUrl}
+    alt="Yellow Card"
+    style={{ maxWidth: "200px", cursor: "pointer" }}
+    onClick={() => handleImageClick(selectedOrder.yellowCardDocumentUrl, "Yellow Card")}
+  />
+  <div>
+    <IconButton
+      onClick={() =>
+        handleCopy(selectedOrder.yellowCardDocumentUrl)
+      }
+    >
+      <ContentCopyIcon />
+    </IconButton>
+  </div>
+</div>
             </div>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSelectedOrder(null)}>Close</Button>
-          {selectedOrder && selectedOrder.status === "processing" && (
+          {/* {selectedOrder && selectedOrder.status === "processing" && (
             <Button
               onClick={handleSendProforma}
               variant="contained"
@@ -802,7 +819,7 @@ const CurrentOrders = () => {
             >
               Send Proforma
             </Button>
-          )}
+         )} */}
           {selectedOrder && selectedOrder.status === "proforma" && (
             <Button
               onClick={handleMarkAsPaid}
@@ -814,6 +831,36 @@ const CurrentOrders = () => {
           )}
         </DialogActions>
       </Dialog>
+      {/* Image Enlargement Dialog */}
+<Dialog 
+  open={!!enlargedImage} 
+  onClose={() => setEnlargedImage(null)}
+  maxWidth="lg"
+  fullWidth
+>
+  <DialogTitle>{enlargedImageTitle}</DialogTitle>
+  <DialogContent>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+      {enlargedImage && (
+        <img 
+          src={enlargedImage} 
+          alt={enlargedImageTitle}
+          style={{ maxWidth: "100%", maxHeight: "80vh" }} 
+        />
+      )}
+    </div>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setEnlargedImage(null)}>Close</Button>
+    <Button 
+      onClick={() => enlargedImage && handleCopy(enlargedImage)} 
+      startIcon={<ContentCopyIcon />}
+    >
+      Copy URL
+    </Button>
+  </DialogActions>
+</Dialog>
+
     </div>
   );
 };
