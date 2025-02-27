@@ -243,7 +243,7 @@ const Library = () => {
                 <TableRow>
                   <TableCell>1</TableCell>
                   <TableCell>
-                    {selectedOrder.data.policyholderName || "N/A"}
+                    {selectedOrder.data.nationalIdNames || "N/A"}
                   </TableCell>
                   <TableCell>
                     {selectedOrder.data.nationalIdNumber || "N/A"}
