@@ -67,6 +67,7 @@ interface Order {
   momoName?: string;
   totalCost: number;
   paidAmount?: number;
+  paidBool?: boolean;
   carImageUrl: string;
   insuranceDocumentUrl: string;
   nationalIdDocumentUrl: string;
@@ -678,10 +679,10 @@ const CurrentOrders = () => {
                   </TableCell>
                   <TableCell
                     onClick={() =>
-                      handleCopy(String(order.paidAmount ?? "N/A"))
+                      handleCopy(String(order.paidBool ?? "N/A"))
                     }
                   >
-                    {order.paidAmount ?? "N/A"}
+                    {order.paidBool ?? "N/A"}
                   </TableCell>
                   <TableCell
                     onClick={() =>
