@@ -145,7 +145,7 @@ const ProformaCell = ({
           body: JSON.stringify({
             orderId: order.id,
             proformaUrl: attachedFile,
-            sendDocumentFirst: true
+            sendDocumentFirst: true,
           }),
         }
       );
@@ -457,8 +457,8 @@ const CurrentOrders = () => {
         <Tab label="Cancelled" />
       </Tabs>
       <Box sx={{ overflow: "auto" }}>
-      {/* sx={{ minWidth: 2500 }} */}
-        <Table sx={{ maxWidth: "100%" }} >
+        {/* sx={{ minWidth: 2500 }} */}
+        <Table sx={{ maxWidth: "100%" }}>
           <TableHead>
             <TableRow>
               <TableCell>No</TableCell>
@@ -678,9 +678,11 @@ const CurrentOrders = () => {
                   >
                     {order.totalCost}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.paidBool ? "Paid" : "No")}>
-  {order.paidBool ? "Paid" : "Not Paid"}
-</TableCell>
+                  <TableCell
+                    onClick={() => handleCopy(order.paidBool ? "Paid" : "No")}
+                  >
+                    {order.paidBool ? "Paid" : "No"}
+                  </TableCell>
                   <TableCell
                     onClick={() =>
                       handleCopy(
