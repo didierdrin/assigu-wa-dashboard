@@ -287,6 +287,18 @@ const InsuranceCertificateCell = ({
     }
   };
 
+
+  const formatDate = (timestamp: Timestamp) => {
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(timestamp.toDate());
+  };
+  
+
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       {uploading ? (
@@ -656,6 +668,13 @@ const CurrentOrders = () => {
                   >
                     {order.paidAmount ?? "N/A"}
                   </TableCell>
+                  <TableCell
+  onClick={() =>
+    handleCopy(String(order.creationDate ? formatDate(order.creationDate) : "N/A"))
+  }
+>
+  {order.creationDate ? formatDate(order.creationDate) : "N/A"}
+</TableCell>
                   {/* Insurance Certificate - custom cell */}
                   <TableCell>
                     <InsuranceCertificateCell
