@@ -288,16 +288,7 @@ const InsuranceCertificateCell = ({
   };
 
 
-  const formatDate = (timestamp: Timestamp) => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    }).format(timestamp.toDate());
-  };
-  
+ 
 
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -385,6 +376,18 @@ const CurrentOrders = () => {
       day: "numeric",
     }).format(timestamp.toDate());
   };
+
+  // With time
+  const formattDate = (timestamp: Timestamp) => {
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(timestamp.toDate());
+  };
+  
 
   // Simple copy-to-clipboard helper
   const handleCopy = (text: string) => {
@@ -476,6 +479,7 @@ const CurrentOrders = () => {
               <TableCell>MOMO Name</TableCell>
               <TableCell>Total Premium</TableCell>
               <TableCell>PAID</TableCell>
+              <TableCell>Creation Date</TableCell>
               <TableCell>Insurance Certificate</TableCell>
               <TableCell>View</TableCell>
             </TableRow>
@@ -670,10 +674,10 @@ const CurrentOrders = () => {
                   </TableCell>
                   <TableCell
   onClick={() =>
-    handleCopy(String(order.creationDate ? formatDate(order.creationDate) : "N/A"))
+    handleCopy(String(order.creationDate ? formattDate(order.creationDate) : "N/A"))
   }
 >
-  {order.creationDate ? formatDate(order.creationDate) : "N/A"}
+  {order.creationDate ? formattDate(order.creationDate) : "N/A"}
 </TableCell>
                   {/* Insurance Certificate - custom cell */}
                   <TableCell>
