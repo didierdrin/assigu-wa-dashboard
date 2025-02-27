@@ -610,11 +610,11 @@ const CurrentOrders = () => {
               <TableCell>Issue Date</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Cover</TableCell>
-              <TableCell>Personal Cover</TableCell>
+              {/* <TableCell>Personal Cover</TableCell>
               <TableCell>Personal Accident Cover</TableCell>
-              <TableCell>Installments</TableCell>
+              <TableCell>Installments</TableCell> */}
               <TableCell>Proforma</TableCell>
-              <TableCell>MOMO Name</TableCell>
+              {/* <TableCell>MOMO Name</TableCell> */}
               <TableCell>Total Premium</TableCell>
               <TableCell>PAID</TableCell>
               <TableCell>Creation Date</TableCell>
@@ -774,7 +774,7 @@ const CurrentOrders = () => {
                       ? order.selectedCoverTypes.split("_")[1]
                       : "N/A"}
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     onClick={() =>
                       handleCopy(String(order.netPremium ?? "N/A"))
                     }
@@ -794,16 +794,16 @@ const CurrentOrders = () => {
                     }
                   >
                     {order.selectedInstallment || "N/A"}
-                  </TableCell>
+                  </TableCell> */}
                   {/* Proforma - custom cell */}
                   <TableCell>
                     <ProformaCell order={order} updateField={updateField} />
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     onClick={() => handleCopy(order.momoName || "N/A")}
                   >
                     {order.momoName || "N/A"}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     onClick={() => handleCopy(String(order.totalCost))}
                   >
