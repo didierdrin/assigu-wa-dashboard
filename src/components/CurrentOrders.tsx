@@ -852,7 +852,7 @@ const CurrentOrders = () => {
               variant="contained"
               color="success"
             >
-              Paid
+              Send Certificate
             </Button>
           )}
         </DialogActions>
