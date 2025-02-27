@@ -55,7 +55,8 @@ interface Order {
   licensedToCarryNo: string;
   usage: string;
   insurer: string;
-  insuranceStartDate: string;
+  insuranceStartDate?: string;
+  insuranceEndDate?: string;
   expiryDate: string;
   carBodyType: string;
   selectedCoverTypes?: string;
@@ -557,12 +558,12 @@ const CurrentOrders = () => {
                     {order.insurer}
                   </TableCell>
                   <TableCell
-                    onClick={() => handleCopy(order.insuranceStartDate)}
+                    onClick={() => handleCopy(order.insuranceStartDate || "N/A")}
                   >
-                    {order.insuranceStartDate}
+                    {order.insuranceStartDate }
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.expiryDate)}>
-                    {order.expiryDate}
+                  <TableCell onClick={() => handleCopy(order.insuranceEndDate || "N/A")}>
+                    {order.insuranceEndDate}
                   </TableCell>
                   {/* Time - time picker */}
                   <TableCell>
