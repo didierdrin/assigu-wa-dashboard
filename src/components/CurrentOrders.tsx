@@ -458,7 +458,7 @@ const CurrentOrders = () => {
       </Tabs>
       <Box sx={{ overflow: "auto" }}>
         {/* sx={{ minWidth: 2500 }} */}
-        <Table sx={{ maxWidth: "100%" }}>
+        <Table sx={{ maxWidth: 1000 }}>
           <TableHead>
             <TableRow>
               <TableCell>No</TableCell>
