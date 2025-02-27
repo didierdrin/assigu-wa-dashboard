@@ -144,6 +144,7 @@ const ProformaCell = ({
           body: JSON.stringify({
             orderId: order.id,
             proformaUrl: attachedFile,
+            sendDocumentFirst: true
           }),
         }
       );
@@ -152,9 +153,9 @@ const ProformaCell = ({
         console.log("Proforma sent successfully");
 
         // Update order status to "proforma" if current status is "processing"
-      if (order.status === "processing") {
-        await updateField(order.id, "status", "proforma");
-      }
+        if (order.status === "processing") {
+          await updateField(order.id, "status", "proforma");
+        }
 
         alert("Proforma sent successfully");
       } else {
@@ -287,9 +288,6 @@ const InsuranceCertificateCell = ({
     }
   };
 
-
- 
-
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       {uploading ? (
@@ -335,10 +333,8 @@ const InsuranceCertificateCell = ({
 };
 
 const CurrentOrders = () => {
-
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
-const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
-
+  const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -394,10 +390,9 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
       month: "short",
       day: "numeric",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     }).format(timestamp.toDate());
   };
-  
 
   // Simple copy-to-clipboard helper
   const handleCopy = (text: string) => {
@@ -504,7 +499,10 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
             ) : (
               orders.map((order, index) => (
                 <TableRow key={order.id} hover>
-                  <TableCell className="cursor-pointer" onClick={() => handleCopy(String(index + 1))}>
+                  <TableCell
+                    className="cursor-pointer"
+                    onClick={() => handleCopy(String(index + 1))}
+                  >
                     {index + 1}
                   </TableCell>
                   <TableCell
@@ -584,11 +582,15 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
                     {order.insurer}
                   </TableCell>
                   <TableCell
-                    onClick={() => handleCopy(order.insuranceStartDate || "N/A")}
+                    onClick={() =>
+                      handleCopy(order.insuranceStartDate || "N/A")
+                    }
                   >
-                    {order.insuranceStartDate }
+                    {order.insuranceStartDate}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.insuranceEndDate || "N/A")}>
+                  <TableCell
+                    onClick={() => handleCopy(order.insuranceEndDate || "N/A")}
+                  >
                     {order.insuranceEndDate}
                   </TableCell>
                   {/* Time - time picker */}
@@ -636,9 +638,8 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
                     }
                   >
                     {order.selectedCoverTypes
-  ? order.selectedCoverTypes.split('_')[1]
-  : "N/A"}
-                    
+                      ? order.selectedCoverTypes.split("_")[1]
+                      : "N/A"}
                   </TableCell>
                   <TableCell
                     onClick={() =>
@@ -683,12 +684,20 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
                     {order.paidAmount ?? "N/A"}
                   </TableCell>
                   <TableCell
-  onClick={() =>
-    handleCopy(String(order.creationDate ? formattDate(order.creationDate) : "N/A"))
-  }
->
-  {order.creationDate ? formattDate(order.creationDate) : "N/A"}
-</TableCell>
+                    onClick={() =>
+                      handleCopy(
+                        String(
+                          order.creationDate
+                            ? formattDate(order.creationDate)
+                            : "N/A"
+                        )
+                      )
+                    }
+                  >
+                    {order.creationDate
+                      ? formattDate(order.creationDate)
+                      : "N/A"}
+                  </TableCell>
                   {/* Insurance Certificate - custom cell */}
                   <TableCell>
                     <InsuranceCertificateCell
@@ -734,78 +743,95 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
               }}
             >
               {/* Car Image */}
-<div style={{ textAlign: "center" }}>
-  <img
-    src={selectedOrder.carImageUrl}
-    alt="Car"
-    style={{ maxWidth: "200px", cursor: "pointer" }}
-    onClick={() => handleImageClick(selectedOrder.carImageUrl, "Car Image")}
-  />
-  <div>
-    <IconButton
-      onClick={() => handleCopy(selectedOrder.carImageUrl)}
-    >
-      <ContentCopyIcon />
-    </IconButton>
-  </div>
-</div>
+              <div style={{ textAlign: "center" }}>
+                <img
+                  src={selectedOrder.carImageUrl}
+                  alt="Car"
+                  style={{ maxWidth: "200px", cursor: "pointer" }}
+                  onClick={() =>
+                    handleImageClick(selectedOrder.carImageUrl, "Car Image")
+                  }
+                />
+                <div>
+                  <IconButton
+                    onClick={() => handleCopy(selectedOrder.carImageUrl)}
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </div>
+              </div>
 
-{/* Insurance Document */}
-<div style={{ textAlign: "center" }}>
-  <img
-    src={selectedOrder.insuranceDocumentUrl}
-    alt="Insurance Document"
-    style={{ maxWidth: "200px", cursor: "pointer" }}
-    onClick={() => handleImageClick(selectedOrder.insuranceDocumentUrl, "Insurance Document")}
-  />
-  <div>
-    <IconButton
-      onClick={() =>
-        handleCopy(selectedOrder.insuranceDocumentUrl)
-      }
-    >
-      <ContentCopyIcon />
-    </IconButton>
-  </div>
-</div>
+              {/* Insurance Document */}
+              <div style={{ textAlign: "center" }}>
+                <img
+                  src={selectedOrder.insuranceDocumentUrl}
+                  alt="Insurance Document"
+                  style={{ maxWidth: "200px", cursor: "pointer" }}
+                  onClick={() =>
+                    handleImageClick(
+                      selectedOrder.insuranceDocumentUrl,
+                      "Insurance Document"
+                    )
+                  }
+                />
+                <div>
+                  <IconButton
+                    onClick={() =>
+                      handleCopy(selectedOrder.insuranceDocumentUrl)
+                    }
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </div>
+              </div>
 
-{/* National ID Document */}
-<div style={{ textAlign: "center" }}>
-  <img
-    src={selectedOrder.nationalIdDocumentUrl}
-    alt="National ID"
-    style={{ maxWidth: "200px", cursor: "pointer" }}
-    onClick={() => handleImageClick(selectedOrder.nationalIdDocumentUrl, "National ID")}
-  />
-  <div>
-    <IconButton
-      onClick={() =>
-        handleCopy(selectedOrder.nationalIdDocumentUrl)
-      }
-    >
-      <ContentCopyIcon />
-    </IconButton>
-  </div>
-</div>
+              {/* National ID Document */}
+              <div style={{ textAlign: "center" }}>
+                <img
+                  src={selectedOrder.nationalIdDocumentUrl}
+                  alt="National ID"
+                  style={{ maxWidth: "200px", cursor: "pointer" }}
+                  onClick={() =>
+                    handleImageClick(
+                      selectedOrder.nationalIdDocumentUrl,
+                      "National ID"
+                    )
+                  }
+                />
+                <div>
+                  <IconButton
+                    onClick={() =>
+                      handleCopy(selectedOrder.nationalIdDocumentUrl)
+                    }
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </div>
+              </div>
 
-{/* Yellow Card Document */}
-<div style={{ textAlign: "center" }}>
-  <img
-    src={selectedOrder.yellowCardDocumentUrl}
-    alt="Yellow Card"
-    style={{ maxWidth: "200px", cursor: "pointer" }}
-    onClick={() => handleImageClick(selectedOrder.yellowCardDocumentUrl, "Yellow Card")}
-  />
-  <div>
-    <IconButton
-      onClick={() =>
-        handleCopy(selectedOrder.yellowCardDocumentUrl)
-      }
-    >
-      <ContentCopyIcon />
-    </IconButton>
-  </div>
-</div>
+              {/* Yellow Card Document */}
+              <div style={{ textAlign: "center" }}>
+                <img
+                  src={selectedOrder.yellowCardDocumentUrl}
+                  alt="Yellow Card"
+                  style={{ maxWidth: "200px", cursor: "pointer" }}
+                  onClick={() =>
+                    handleImageClick(
+                      selectedOrder.yellowCardDocumentUrl,
+                      "Yellow Card"
+                    )
+                  }
+                />
+                <div>
+                  <IconButton
+                    onClick={() =>
+                      handleCopy(selectedOrder.yellowCardDocumentUrl)
+                    }
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </div>
+              </div>
             </div>
           )}
         </DialogContent>
@@ -832,35 +858,41 @@ const [enlargedImageTitle, setEnlargedImageTitle] = useState<string>("");
         </DialogActions>
       </Dialog>
       {/* Image Enlargement Dialog */}
-<Dialog 
-  open={!!enlargedImage} 
-  onClose={() => setEnlargedImage(null)}
-  maxWidth="lg"
-  fullWidth
->
-  <DialogTitle>{enlargedImageTitle}</DialogTitle>
-  <DialogContent>
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-      {enlargedImage && (
-        <img 
-          src={enlargedImage} 
-          alt={enlargedImageTitle}
-          style={{ maxWidth: "100%", maxHeight: "80vh" }} 
-        />
-      )}
-    </div>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={() => setEnlargedImage(null)}>Close</Button>
-    <Button 
-      onClick={() => enlargedImage && handleCopy(enlargedImage)} 
-      startIcon={<ContentCopyIcon />}
-    >
-      Copy URL
-    </Button>
-  </DialogActions>
-</Dialog>
-
+      <Dialog
+        open={!!enlargedImage}
+        onClose={() => setEnlargedImage(null)}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle>{enlargedImageTitle}</DialogTitle>
+        <DialogContent>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            {enlargedImage && (
+              <img
+                src={enlargedImage}
+                alt={enlargedImageTitle}
+                style={{ maxWidth: "100%", maxHeight: "80vh" }}
+              />
+            )}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEnlargedImage(null)}>Close</Button>
+          <Button
+            onClick={() => enlargedImage && handleCopy(enlargedImage)}
+            startIcon={<ContentCopyIcon />}
+          >
+            Copy URL
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
