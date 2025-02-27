@@ -154,7 +154,7 @@ const ProformaCell = ({
       if (order.status === "processing") {
         await updateField(order.id, "status", "proforma");
       }
-      
+
         alert("Proforma sent successfully");
       } else {
         console.error("Failed to send proforma:", data.message);
@@ -599,7 +599,7 @@ const CurrentOrders = () => {
                         <MenuItem value="SUV">SUV</MenuItem>
                         <MenuItem value="Pickup">Pickup</MenuItem>
                         <MenuItem value="Minibus">Minibus</MenuItem>
-                        <MenuItem value="Lorry">Lorry</MenuItem>
+                        <MenuItem value="Truck">Truck</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -608,7 +608,10 @@ const CurrentOrders = () => {
                       handleCopy(order.selectedCoverTypes || "N/A")
                     }
                   >
-                    {order.selectedCoverTypes || "N/A"}
+                    {order.selectedCoverTypes
+  ? order.selectedCoverTypes.split('_')[1]
+  : "N/A"}
+                    
                   </TableCell>
                   <TableCell
                     onClick={() =>
