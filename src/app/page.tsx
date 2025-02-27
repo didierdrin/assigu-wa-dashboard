@@ -45,8 +45,8 @@ function Dashboard() {
 
   const menuItems = [
     { name: 'overview', icon: FaHome, component: Overview },
-    { name: 'Clients', icon: FaPersonBooth, component: Library },
-    { name: 'Orders', icon: FaShoppingCart, component: CurrentOrders },
+    // { name: 'Clients', icon: FaPersonBooth, component: Library },
+    { name: 'Policies', icon: FaShoppingCart, component: CurrentOrders },
     
   ];
 
