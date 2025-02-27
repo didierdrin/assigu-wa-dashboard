@@ -213,8 +213,137 @@ const ProformaCell = ({
   );
 };
 
+
 // Custom component for the Insurance Certificate cell
 const InsuranceCertificateCell = ({
+  order,
+  updateField,
+}: {
+  order: Order;
+  updateField: any;
+}) => {
+  const [attachedFile, setAttachedFile] = useState<string | null>(
+    order.uploadedInsuranceCertificateUrl || null
+  );
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setUploading(true);
+      try {
+        // Create a reference to the storage location
+        const storageRef = ref(
+          storage,
+          `certificates/${order.id}/${file.name}`
+        );
+
+        // Upload the file
+        const snapshot = await uploadBytes(storageRef, file);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        // Update the field in Firestore
+        await updateField(
+          order.id,
+          "uploadedInsuranceCertificateUrl",
+          downloadURL
+        );
+
+        // Update local state
+        setAttachedFile(downloadURL);
+      } catch (error) {
+        console.error("Error uploading insurance certificate:", error);
+        alert("Failed to upload file. Please try again.");
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
+  const handleSend = async () => {
+    console.log("Sending insurance certificate using URL:", attachedFile);
+    try {
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/mark-as-paid",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            certificateUrl: attachedFile,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        console.log("Insurance certificate sent successfully");
+        
+        // Update order status to "completed" if needed
+        if (order.status !== "completed") {
+          await updateField(order.id, "status", "completed");
+        }
+        
+        alert("Insurance certificate sent successfully");
+      } else {
+        console.error("Failed to send certificate:", data.message);
+        alert(`Failed to send certificate: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error sending certificate:", error);
+      alert("Error sending certificate. Please try again.");
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      {uploading ? (
+        <CircularProgress size={24} />
+      ) : attachedFile ? (
+        <>
+          <a
+            href={attachedFile}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              marginRight: "8px",
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            View File
+          </a>
+          <IconButton onClick={handleSend} color="primary">
+            <SendIcon />
+          </IconButton>
+        </>
+      ) : (
+        <div>
+          <input
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            id={`certificate-file-${order.id}`}
+          />
+          <label htmlFor={`certificate-file-${order.id}`}>
+            <IconButton component="span" color="primary">
+              <AttachFileIcon />
+            </IconButton>
+          </label>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+
+// Custom component for the Insurance Certificate cell old 
+const InsuranceCertificateCellOld = ({
   order,
   updateField,
 }: {
@@ -332,6 +461,8 @@ const InsuranceCertificateCell = ({
     </div>
   );
 };
+
+
 
 const CurrentOrders = () => {
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
