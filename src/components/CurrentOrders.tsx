@@ -456,9 +456,9 @@ const CurrentOrders = () => {
         <Tab label="Completed" />
         <Tab label="Cancelled" />
       </Tabs>
-      <Box sx={{ overflow: "auto" }} style={{ width: "100%", overflowX: "auto" }}>
+      <Box sx={{ overflow: "auto" }}>
       {/* sx={{ minWidth: 2500 }} */}
-        <Table >
+        <Table sx={{ maxWidth: "100%" }} >
           <TableHead>
             <TableRow>
               <TableCell>No</TableCell>
@@ -678,7 +678,7 @@ const CurrentOrders = () => {
                   >
                     {order.totalCost}
                   </TableCell>
-                  <TableCell onClick={() => handleCopy(order.paidBool ? "Paid" : "Not Paid")}>
+                  <TableCell onClick={() => handleCopy(order.paidBool ? "Paid" : "No")}>
   {order.paidBool ? "Paid" : "Not Paid"}
 </TableCell>
                   <TableCell
