@@ -149,6 +149,12 @@ const ProformaCell = ({
       const data = await response.json();
       if (data.success) {
         console.log("Proforma sent successfully");
+
+        // Update order status to "proforma" if current status is "processing"
+      if (order.status === "processing") {
+        await updateField(order.id, "status", "proforma");
+      }
+      
         alert("Proforma sent successfully");
       } else {
         console.error("Failed to send proforma:", data.message);
