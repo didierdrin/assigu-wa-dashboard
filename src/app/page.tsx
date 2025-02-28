@@ -53,7 +53,7 @@ function Dashboard() {
   const ActiveComponent = menuItems.find(item => item.name === activeTab)?.component || (() => <div>Not found</div>);
 
   return (
-    <div className="flex min-h-screen bg-gray-100 w-full overflow-x-hidden">
+    <div className="flex min-h-screen bg-gray-100 w-full overflow-x-auto">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-green-500 min-h-screen flex flex-col text-white p-5 transition-all duration-300`}>
         <div className='flex flex-col flex-grow'>
