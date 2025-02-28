@@ -7,6 +7,7 @@ import {
   doc,
   updateDoc,
   Timestamp,
+  orderBy
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestore as db, storage } from "../../firebaseApp";
@@ -489,7 +490,8 @@ const CurrentOrders = () => {
 
     const q = query(
       collection(db, "whatsappInsuranceOrders"),
-      where("status", "==", currentStatus)
+      where("status", "==", currentStatus),
+      orderBy("creationDate", "desc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const ordersData: Order[] = snapshot.docs.map((doc) => ({
