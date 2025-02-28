@@ -803,19 +803,11 @@ const CurrentOrders = () => {
                   >
                     {order.momoName || "N/A"}
                   </TableCell> */}
-                  <TableCell>
-  <TextField
-    type="number"
-    value={order.totalCost}
-    onChange={(e) => 
-      updateField(
-        order.id, 
-        "totalCost", 
-        parseFloat(e.target.value) // Convert the string input to a number
-      )
-    }
-  />
-</TableCell>
+                  <TableCell
+                    onClick={() => handleCopy(String(order.totalCost))}
+                  >
+                    {order.totalCost}
+                  </TableCell>
                   <TableCell
                     onClick={() => handleCopy(order.paidBool ? "Paid" : "No")}
                   >
