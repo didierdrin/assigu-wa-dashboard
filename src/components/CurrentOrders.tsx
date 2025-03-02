@@ -901,7 +901,7 @@ const CurrentOrders = () => {
   {order.status === "completed" ? "5000" : "0"}
 </TableCell>
 
-                  <TableCell sx={{ width: '200px' }}>
+                  <TableCell sx={{ width: '300px' }}>
   <TextField
     type="number"
     value={order.walletId}
