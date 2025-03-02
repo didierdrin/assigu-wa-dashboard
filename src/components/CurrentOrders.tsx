@@ -37,6 +37,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { getAuth } from "firebase/auth";
+import EditableNumberCell from "./EditableNumberCell";
 
 // Define your Order interface
 interface Order {
@@ -845,20 +846,13 @@ const CurrentOrders = () => {
                   >
                     {order.momoName || "N/A"}
                   </TableCell> */}
-                  <TableCell sx={{ width: '200px' }}>
-  <TextField
-  style={{width: "100px"}}
-    type="number"
-    value={parseFloat(order.totalCost) === 0 ? "" : order.totalCost}
-    onChange={(e) => 
-      updateField(
-        order.id, 
-        "totalCost", 
-        parseFloat(e.target.value) // Convert the string input to a number
-      )
-    }
-  />
-</TableCell>
+               <EditableNumberCell
+  order={order}
+  field="totalCost"
+  value={order.totalCost}
+  updateField={updateField}
+  width="100px"
+/>
                   <TableCell
                     onClick={() => handleCopy(order.paidBool ? "Paid" : "No")}
                   >
@@ -902,20 +896,14 @@ const CurrentOrders = () => {
   {order.status === "completed" ? "5000" : "0"}
 </TableCell>
 
-                  <TableCell>
-  <TextField
-  style={{width: "100px"}}
-    type="number"
-    value={parseFloat(order.walletId) === 0 ? "" : order.walletId}
-    onChange={(e) => 
-      updateField(
-        order.id, 
-        "walletId", 
-        parseFloat(e.target.value) // Convert the string input to a number
-      )
-    }
-  />
-</TableCell>
+                 
+<EditableNumberCell
+  order={order}
+  field="walletId"
+  value={order.walletId}
+  updateField={updateField}
+  width="100px"
+/>
                 </TableRow>
               ))
             )}
