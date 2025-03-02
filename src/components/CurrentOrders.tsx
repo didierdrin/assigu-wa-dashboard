@@ -849,7 +849,7 @@ const CurrentOrders = () => {
   <TextField
   style={{width: "100px"}}
     type="number"
-    value={order.totalCost}
+    value={order.totalCost === 0 ? "" : order.totalCost}
     onChange={(e) => 
       updateField(
         order.id, 
@@ -906,7 +906,7 @@ const CurrentOrders = () => {
   <TextField
   style={{width: "100px"}}
     type="number"
-    value={order.walletId}
+    value={order.walletId === 0 ? "" : order.walletId}
     onChange={(e) => 
       updateField(
         order.id, 
