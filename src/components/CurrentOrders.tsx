@@ -845,7 +845,7 @@ const CurrentOrders = () => {
                   >
                     {order.momoName || "N/A"}
                   </TableCell> */}
-                  <TableCell>
+                  <TableCell sx={{ width: '200px' }}>
   <TextField
     type="number"
     value={order.totalCost}
@@ -901,7 +901,7 @@ const CurrentOrders = () => {
   {order.status === "completed" ? "5000" : "0"}
 </TableCell>
 
-                  <TableCell>
+                  <TableCell sx={{ width: '200px' }}>
   <TextField
     type="number"
     value={order.walletId}
