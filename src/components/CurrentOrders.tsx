@@ -38,6 +38,11 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { getAuth } from "firebase/auth";
 import EditableNumberCell from "./EditableNumberCell";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+
+
+
 
 // Define your Order interface
 interface Order {
@@ -96,8 +101,326 @@ const updateField = async (orderId: string, field: string, value: any) => {
   }
 };
 
-// Custom component for the Proforma cell
-const ProformaCell = ({
+
+
+
+
+
+const ProformaCell = ({ order, updateField } : any) => {
+  const [attachedFile, setAttachedFile] = useState(order.uploadedProformaUrl || null);
+  const [uploading, setUploading] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  // const fileInputRef = React.useRef(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+
+  const handleFileChange = async (e : any) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setUploading(true);
+      try {
+        const storageRef = ref(storage, `proformas/${order.id}/${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        await updateField(order.id, "uploadedProformaUrl", downloadURL);
+        setAttachedFile(downloadURL);
+      } catch (error) {
+        console.error("Error uploading proforma:", error);
+        alert("Failed to upload file. Please try again.");
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
+  const handleSend = async () => {
+    console.log("Sending proforma using URL:", attachedFile);
+    try {
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/send-proforma",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            proformaUrl: attachedFile,
+            sendDocumentFirst: true,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        console.log("Proforma sent successfully");
+        if (order.status === "processing") {
+          await updateField(order.id, "status", "proforma");
+        }
+        alert("Proforma sent successfully");
+      } else {
+        console.error("Failed to send proforma:", data.message);
+        alert(`Failed to send proforma: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error sending proforma:", error);
+      alert("Error sending proforma. Please try again.");
+    }
+  };
+
+  // Opens the menu
+  const handleMenuOpen = (event : any)  => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  // Closes the menu
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
+  // Triggers file edit (simulate click on hidden input)
+  const handleEdit = () => {
+    handleMenuClose();
+    fileInputRef.current && fileInputRef.current.click();
+  };
+
+  // Deletes the attached file
+  const handleDelete = async () => {
+    handleMenuClose();
+    try {
+      // Update Firestore field to null
+      await updateField(order.id, "uploadedProformaUrl", null);
+      // Clear local state
+      setAttachedFile(null);
+      alert("File deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("Failed to delete file.");
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      {uploading ? (
+        <CircularProgress size={24} />
+      ) : attachedFile ? (
+        <>
+          <a
+            href={attachedFile}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              marginRight: "8px",
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            View File
+          </a>
+          <IconButton onClick={handleSend} color="primary">
+            <SendIcon />
+          </IconButton>
+          <IconButton onClick={handleMenuOpen}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={menuAnchor}
+            open={Boolean(menuAnchor)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          </Menu>
+          {/* Hidden file input */}
+          <input
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            id={`proforma-file-${order.id}`}
+          />
+        </>
+      ) : (
+        <div>
+          <input
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            id={`proforma-file-${order.id}`}
+          />
+          <label htmlFor={`proforma-file-${order.id}`}>
+            <IconButton component="span" color="primary">
+              <AttachFileIcon />
+            </IconButton>
+          </label>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+const InsuranceCertificateCell = ({ order, updateField } : any) => {
+  const [attachedFile, setAttachedFile] = useState(order.uploadedInsuranceCertificateUrl || null);
+  const [uploading, setUploading] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  //const fileInputRef = React.useRef(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e : any) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setUploading(true);
+      try {
+        const storageRef = ref(storage, `certificates/${order.id}/${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        await updateField(order.id, "uploadedInsuranceCertificateUrl", downloadURL);
+        setAttachedFile(downloadURL);
+      } catch (error) {
+        console.error("Error uploading insurance certificate:", error);
+        alert("Failed to upload file. Please try again.");
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
+  const handleSend = async () => {
+    console.log("Sending insurance certificate using URL:", attachedFile);
+    try {
+      const response = await fetch(
+        "https://assigurwmessaging.onrender.com/api/mark-as-paid",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            certificateUrl: attachedFile,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        console.log("Insurance certificate sent successfully");
+        if (order.status !== "completed") {
+          await updateField(order.id, "status", "completed");
+        }
+        alert("Insurance certificate sent successfully");
+      } else {
+        console.error("Failed to send certificate:", data.message);
+        alert(`Failed to send certificate: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error sending certificate:", error);
+      alert("Error sending certificate. Please try again.");
+    }
+  };
+
+  const handleMenuOpen = (event : any) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
+  const handleEdit = () => {
+    handleMenuClose();
+    fileInputRef.current && fileInputRef.current.click();
+  };
+
+  const handleDelete = async () => {
+    handleMenuClose();
+    try {
+      await updateField(order.id, "uploadedInsuranceCertificateUrl", null);
+      setAttachedFile(null);
+      alert("File deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("Failed to delete file.");
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      {uploading ? (
+        <CircularProgress size={24} />
+      ) : attachedFile ? (
+        <>
+          <a
+            href={attachedFile}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              marginRight: "8px",
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            View File
+          </a>
+          <IconButton onClick={handleSend} color="primary">
+            <SendIcon />
+          </IconButton>
+          <IconButton onClick={handleMenuOpen}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={menuAnchor}
+            open={Boolean(menuAnchor)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          </Menu>
+          <input
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            id={`certificate-file-${order.id}`}
+          />
+        </>
+      ) : (
+        <div>
+          <input
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            id={`certificate-file-${order.id}`}
+          />
+          <label htmlFor={`certificate-file-${order.id}`}>
+            <IconButton component="span" color="primary">
+              <AttachFileIcon />
+            </IconButton>
+          </label>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+
+
+
+
+
+
+
+
+
+
+// Custom component for the Proforma cell old
+const ProformaCellOld = ({
   order,
   updateField,
 }: {
@@ -219,7 +542,7 @@ const ProformaCell = ({
 
 
 // Custom component for the Insurance Certificate cell
-const InsuranceCertificateCell = ({
+const InsuranceCertificateCellOld = ({
   order,
   updateField,
 }: {
@@ -346,125 +669,6 @@ const InsuranceCertificateCell = ({
 
 
 
-// Custom component for the Insurance Certificate cell old 
-const InsuranceCertificateCellOld = ({
-  order,
-  updateField,
-}: {
-  order: Order;
-  updateField: any;
-}) => {
-  const [attachedFile, setAttachedFile] = useState<string | null>(
-    order.uploadedInsuranceCertificateUrl || null
-  );
-  const [uploading, setUploading] = useState(false);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      setUploading(true);
-      try {
-        // Create a reference to the storage location
-        const storageRef = ref(
-          storage,
-          `certificates/${order.id}/${file.name}`
-        );
-
-        // Upload the file
-        const snapshot = await uploadBytes(storageRef, file);
-
-        // Get the download URL
-        const downloadURL = await getDownloadURL(snapshot.ref);
-
-        // Update the field in Firestore
-        await updateField(
-          order.id,
-          "uploadedInsuranceCertificateUrl",
-          downloadURL
-        );
-
-        // Update local state
-        setAttachedFile(downloadURL);
-      } catch (error) {
-        console.error("Error uploading insurance certificate:", error);
-        alert("Failed to upload file. Please try again.");
-      } finally {
-        setUploading(false);
-      }
-    }
-  };
-
-  const handleSend = async () => {
-    console.log("Sending insurance certificate using URL:", attachedFile);
-    try {
-      const response = await fetch(
-        "https://assigurwmessaging.onrender.com/api/send-insurance-certificate",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            orderId: order.id,
-            certificateUrl: attachedFile,
-          }),
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        console.log("Insurance certificate sent successfully");
-        alert("Insurance certificate sent successfully");
-      } else {
-        console.error("Failed to send certificate:", data.message);
-        alert(`Failed to send certificate: ${data.message}`);
-      }
-    } catch (error) {
-      console.error("Error sending certificate:", error);
-      alert("Error sending certificate. Please try again.");
-    }
-  };
-
-  return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      {uploading ? (
-        <CircularProgress size={24} />
-      ) : attachedFile ? (
-        <>
-          <a
-            href={attachedFile}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              marginRight: "8px",
-              maxWidth: "150px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            View File
-          </a>
-          <IconButton onClick={handleSend} color="primary">
-            <SendIcon />
-          </IconButton>
-        </>
-      ) : (
-        <div>
-          <input
-            type="file"
-            accept="application/pdf,image/*"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-            id={`certificate-file-${order.id}`}
-          />
-          <label htmlFor={`certificate-file-${order.id}`}>
-            <IconButton component="span" color="primary">
-              <AttachFileIcon />
-            </IconButton>
-          </label>
-        </div>
-      )}
-    </div>
-  );
-};
 
 
 
