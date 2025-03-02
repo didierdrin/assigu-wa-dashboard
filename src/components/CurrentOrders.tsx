@@ -906,7 +906,7 @@ const CurrentOrders = () => {
   <TextField
   style={{width: "100px"}}
     type="number"
-    value={order.walletId === 0 ? "" : order.walletId}
+    value={parseFloat(order.walletId) === 0 ? "" : order.walletId}
     onChange={(e) => 
       updateField(
         order.id, 
