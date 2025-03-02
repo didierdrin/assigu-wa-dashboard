@@ -80,6 +80,8 @@ interface Order {
   // Fields to hold the uploaded file URLs:
   uploadedProformaUrl?: string;
   uploadedInsuranceCertificateUrl?: string;
+  walletId: string; 
+  tokens: number;
 }
 
 // Helper to update a field in Firestore immediately
@@ -479,6 +481,32 @@ const CurrentOrders = () => {
     setEnlargedImageTitle(title);
   };
 
+  // useEffect(() => {
+  //   const currentUser = auth.currentUser;
+  //   if (!currentUser) {
+  //     console.error("No user logged in");
+  //     return;
+  //   }
+  //   const statuses = ["processing", "proforma", "completed", "cancelled"];
+  //   const currentStatus = statuses[currentTab];
+
+  //   const q = query(
+  //     collection(db, "whatsappInsuranceOrders"),
+  //     where("status", "==", currentStatus),
+  //     orderBy("creationDate", "desc")
+  //   );
+  //   const unsubscribe = onSnapshot(q, (snapshot) => {
+  //     const ordersData: Order[] = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...(doc.data() as Omit<Order, "id">),
+  //     }));
+  //     setOrders(ordersData);
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [currentTab, auth]);
+
+
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (!currentUser) {
@@ -487,7 +515,7 @@ const CurrentOrders = () => {
     }
     const statuses = ["processing", "proforma", "completed", "cancelled"];
     const currentStatus = statuses[currentTab];
-
+  
     const q = query(
       collection(db, "whatsappInsuranceOrders"),
       where("status", "==", currentStatus),
@@ -498,11 +526,21 @@ const CurrentOrders = () => {
         id: doc.id,
         ...(doc.data() as Omit<Order, "id">),
       }));
+      
+      // Update tokens field if not matching the expected value:
+      ordersData.forEach((order) => {
+        const expectedTokens = order.status === "completed" ? 5000 : 0;
+        if (order.tokens !== expectedTokens) {
+          updateField(order.id, "tokens", expectedTokens);
+        }
+      });
+  
       setOrders(ordersData);
     });
-
+  
     return () => unsubscribe();
   }, [currentTab, auth]);
+  
 
   const handleTabChange = (_: any, newValue: number) => {
     setCurrentTab(newValue);
@@ -621,6 +659,8 @@ const CurrentOrders = () => {
               <TableCell>Creation Date</TableCell>
               <TableCell>Insurance Certificate</TableCell>
               <TableCell>View</TableCell>
+              <TableCell>Tokens</TableCell>
+              <TableCell>WalletId</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -857,6 +897,23 @@ const CurrentOrders = () => {
                       View
                     </Button>
                   </TableCell>
+                  <TableCell onClick={() => handleCopy(order.status === "completed" ? "5000" : "0")}>
+  {order.status === "completed" ? "5000" : "0"}
+</TableCell>
+
+                  <TableCell>
+  <TextField
+    type="number"
+    value={order.walletId}
+    onChange={(e) => 
+      updateField(
+        order.id, 
+        "walletId", 
+        parseFloat(e.target.value) // Convert the string input to a number
+      )
+    }
+  />
+</TableCell>
                 </TableRow>
               ))
             )}
