@@ -104,7 +104,7 @@ function Dashboard() {
             </svg>
           </div>
           <div className="flex space-x-8 mr-8">
-            <FaBell className="bg-white h-8 w-8 p-2 border border-black rounded-lg hover:bg-black hover:text-green-300 cursor-pointer" />
+            {/* <FaBell className="bg-white h-8 w-8 p-2 border border-black rounded-lg hover:bg-black hover:text-green-300 cursor-pointer" /> */}
             {/* <FaUser className="bg-white h-8 w-8 p-2 border border-black rounded-lg hover:bg-black hover:text-teal-300 cursor-pointer" /> */}
           </div>
         </div>
