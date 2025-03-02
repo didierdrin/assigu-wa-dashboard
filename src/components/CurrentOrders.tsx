@@ -903,6 +903,7 @@ const CurrentOrders = () => {
 
                   <TableCell sx={{ width: '300px' }}>
   <TextField
+  style={{width: "300px"}}
     type="number"
     value={order.walletId}
     onChange={(e) => 
