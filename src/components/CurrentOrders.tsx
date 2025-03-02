@@ -66,7 +66,7 @@ interface Order {
   selectedInstallment?: string;
   policyNo: string;
   momoName?: string;
-  totalCost: number;
+  totalCost: string;
   paidAmount?: number;
   paidBool: boolean;
   carImageUrl: string;
@@ -849,7 +849,7 @@ const CurrentOrders = () => {
   <TextField
   style={{width: "100px"}}
     type="number"
-    value={order.totalCost === 0 ? "" : order.totalCost}
+    value={parseFloat(order.totalCost) === 0 ? "" : order.totalCost}
     onChange={(e) => 
       updateField(
         order.id, 
