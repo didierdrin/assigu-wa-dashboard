@@ -686,30 +686,7 @@ const CurrentOrders = () => {
     setEnlargedImageTitle(title);
   };
 
-  // useEffect(() => {
-  //   const currentUser = auth.currentUser;
-  //   if (!currentUser) {
-  //     console.error("No user logged in");
-  //     return;
-  //   }
-  //   const statuses = ["processing", "proforma", "completed", "cancelled"];
-  //   const currentStatus = statuses[currentTab];
-
-  //   const q = query(
-  //     collection(db, "whatsappInsuranceOrders"),
-  //     where("status", "==", currentStatus),
-  //     orderBy("creationDate", "desc")
-  //   );
-  //   const unsubscribe = onSnapshot(q, (snapshot) => {
-  //     const ordersData: Order[] = snapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...(doc.data() as Omit<Order, "id">),
-  //     }));
-  //     setOrders(ordersData);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [currentTab, auth]);
+  
 
 
   useEffect(() => {
@@ -733,12 +710,12 @@ const CurrentOrders = () => {
       }));
       
       // Update tokens field if not matching the expected value:
-      ordersData.forEach((order) => {
-        const expectedTokens = order.status === "completed" ? 5000 : 0;
-        if (order.tokens !== expectedTokens) {
-          updateField(order.id, "tokens", expectedTokens);
-        }
-      });
+      // ordersData.forEach((order) => {
+      //   const expectedTokens = order.status === "completed" ? 5000 : 0;
+      //   if (order.tokens !== expectedTokens) {
+      //     updateField(order.id, "tokens", expectedTokens);
+      //   }
+      // });
   
       setOrders(ordersData);
     });
