@@ -38,6 +38,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { getAuth } from "firebase/auth";
 import EditableNumberCell from "./EditableNumberCell";
+import EditableNumberCellTwo from "./EditableNumberCellTwo";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import EditableTimeCell from "../components/EditableTimeCell";
@@ -1084,7 +1085,7 @@ const CurrentOrders = () => {
 </TableCell>
 
                  
-<EditableNumberCell
+<EditableNumberCellTwo
   order={order}
   field="walletId"
   value={order.walletId}
