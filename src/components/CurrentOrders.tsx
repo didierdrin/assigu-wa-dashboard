@@ -42,6 +42,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import EditableTimeCell from "../components/EditableTimeCell";
 import EditableDateCell from "@/components/EditableDateCell";
+import EditablePaymentCell from "./EditablePaymentCell";
 
 
 
@@ -1038,57 +1039,12 @@ const CurrentOrders = () => {
                   >
                     {order.paidBool ? "Paid" : "No"}
                   </TableCell> */}
-                  <TableCell>
-  <FormControl fullWidth>
-    <InputLabel>Payment</InputLabel>
-    <Select
-      value={order.paidBool ? "Paid" : "No"}
-      label="Payment"
-      onChange={(e) => {
-        // Update the field first
-        const newValue = e.target.value === "Paid";
-        updateField(order.id, "paidBool", newValue);
-        
-        // If changed to "Paid", trigger the WhatsApp notification
-        if (newValue) {
-          // Get the phone number
-          const phone = order.userPhone ? 
-            (order.userPhone.startsWith('+') ? order.userPhone.substring(1) : order.userPhone) 
-            : null;
-            
-          if (phone) {
-            // Call your API endpoint to send the payment received message
-            fetch("/api/send-payment-confirmation", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                orderId: order.id,
-                phone: phone
-              }),
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                // Show success notification if needed
-                console.log("Payment confirmation sent successfully");
-              } else {
-                console.error("Failed to send payment confirmation");
-              }
-            })
-            .catch(error => {
-              console.error("Error sending payment confirmation:", error);
-            });
-          }
-        }
-      }}
-    >
-      <MenuItem value="Paid">Paid</MenuItem>
-      <MenuItem value="No">No</MenuItem>
-    </Select>
-  </FormControl>
-</TableCell>
+                {/* Payment status - now with edit/update button */}
+<EditablePaymentCell
+  order={order}
+  updateField={updateField}
+  width="200px"
+/>
                   <TableCell
                     onClick={() =>
                       handleCopy(
