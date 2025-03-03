@@ -26,7 +26,7 @@ const EditablePaymentCell = ({ order, updateField, width = "200px" } : any) => {
         
       if (phone) {
         // Call your API endpoint to send the payment received message
-        fetch("/api/send-payment-confirmation", {
+        fetch("https://assigurwmessaging.onrender.com/api/send-payment-confirmation", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
