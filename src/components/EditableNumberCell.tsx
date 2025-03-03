@@ -37,8 +37,11 @@ const EditableNumberCell = ({ order, field, value, updateField, width = "200px" 
       ) : (
         <>
           <span onClick={() => handleCopy(localValue.toString())}>
-            {localValue === "0" || localValue === 0 ? "" : localValue}
-          </span>
+  {localValue === "0" || localValue === 0
+    ? ""
+    : Number(localValue).toLocaleString()}
+</span>
+
           <Button
             variant="outlined"
             onClick={() => setEditing(true)}

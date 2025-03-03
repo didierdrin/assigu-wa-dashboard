@@ -40,6 +40,8 @@ import { getAuth } from "firebase/auth";
 import EditableNumberCell from "./EditableNumberCell";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
+import EditableTimeCell from "../components/EditableTimeCell";
+import EditableDateCell from "@/components/EditableDateCell";
 
 
 
@@ -949,26 +951,23 @@ const CurrentOrders = () => {
                   >
                     {order.insuranceEndDate}
                   </TableCell>
-                  {/* Time - time picker */}
-                  <TableCell>
-                    <input
-                      type="time"
-                      value={order.timeValue || ""}
-                      onChange={(e) =>
-                        updateField(order.id, "timeValue", e.target.value)
-                      }
-                    />
-                  </TableCell>
-                  {/* Issue Date - date picker */}
-                  <TableCell>
-                    <input
-                      type="date"
-                      value={order.issueDate || ""}
-                      onChange={(e) =>
-                        updateField(order.id, "issueDate", e.target.value)
-                      }
-                    />
-                  </TableCell>
+                  {/* Time - now with edit/update button */}
+<EditableTimeCell
+  order={order}
+  field="timeValue"
+  value={order.timeValue}
+  updateField={updateField}
+  width="200px"
+/>
+
+{/* Issue Date - now with edit/update button */}
+<EditableDateCell
+  order={order}
+  field="issueDate"
+  value={order.issueDate}
+  updateField={updateField}
+  width="200px"
+/>
                   {/* Type - dropdown */}
                   <TableCell>
                     <FormControl fullWidth>
@@ -1034,11 +1033,62 @@ const CurrentOrders = () => {
   updateField={updateField}
   width="100px"
 />
-                  <TableCell
+                  {/* <TableCell
                     onClick={() => handleCopy(order.paidBool ? "Paid" : "No")}
                   >
                     {order.paidBool ? "Paid" : "No"}
-                  </TableCell>
+                  </TableCell> */}
+                  <TableCell>
+  <FormControl fullWidth>
+    <InputLabel>Payment</InputLabel>
+    <Select
+      value={order.paidBool ? "Paid" : "No"}
+      label="Payment"
+      onChange={(e) => {
+        // Update the field first
+        const newValue = e.target.value === "Paid";
+        updateField(order.id, "paidBool", newValue);
+        
+        // If changed to "Paid", trigger the WhatsApp notification
+        if (newValue) {
+          // Get the phone number
+          const phone = order.userPhone ? 
+            (order.userPhone.startsWith('+') ? order.userPhone.substring(1) : order.userPhone) 
+            : null;
+            
+          if (phone) {
+            // Call your API endpoint to send the payment received message
+            fetch("/api/send-payment-confirmation", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                orderId: order.id,
+                phone: phone
+              }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                // Show success notification if needed
+                console.log("Payment confirmation sent successfully");
+              } else {
+                console.error("Failed to send payment confirmation");
+              }
+            })
+            .catch(error => {
+              console.error("Error sending payment confirmation:", error);
+            });
+          }
+        }
+      }}
+    >
+      <MenuItem value="Paid">Paid</MenuItem>
+      <MenuItem value="No">No</MenuItem>
+    </Select>
+  </FormControl>
+</TableCell>
                   <TableCell
                     onClick={() =>
                       handleCopy(
